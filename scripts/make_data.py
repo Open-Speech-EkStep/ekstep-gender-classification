@@ -1,12 +1,13 @@
 import numpy as np
-import pandas as import pd
+import pandas as pd
 
-def make_data(embeddings):
-    data = np.load(embeddings)
+def make_data(npz_path):
+    data = np.load(npz_path)
     embeddings, duration, labels, paths = data['embeds'], data['duration'], data['gender'], data['file_paths']
+    source_name = [p.split('/')[-5] for p in paths]
 
-    labels = np.where(labels=='male', 0, labels)
-    labels = np.where(labels=='female', 1, labels)
+    labels = np.where(labels=='Male', 0, labels)
+    labels = np.where(labels=='Female', 1, labels)
 
     embeddings = embeddings.astype('float16')
     labels = labels.astype('int16')
@@ -21,4 +22,6 @@ def make_data(embeddings):
     data_df.insert(loc=2, column='source_name', value=source_name)
     data_df.insert(loc=3,column='file_paths', value=paths)
 
-    data_df.to_csv('data.csv', index=False)
+    #data_df.to_csv('data.csv', index=False)
+
+    return data_df

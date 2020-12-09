@@ -1,4 +1,4 @@
-# python create_embeddings.py --source-dir './data/' --source-dir-pattern '*/*/*/clean/*.wav' --output-file-name './gender_embeds.npz'
+# python create_embeddings.py --source-dir './data/' --source-dir-pattern '*/*/clean/*.wav' --output-file-name './gender_embeds.npz'
 
 from resemblyzer import preprocess_wav, VoiceEncoder
 from tqdm import tqdm
@@ -18,7 +18,7 @@ def encoder(source_dir, source_dir_pattern, embed_file_name):
     file_paths = audio_paths(source_dir, source_dir_pattern)
     print('Number of files: {}'.format(len(file_paths)))
     # Example file_path: /Users/neerajchhimwal/ekstep-speech-recognition/gender_identification/data/*/male/
-    gender = [i.split('/')[-4].split('_')[-1] for i in file_paths]
+    gender = [i.split('/')[-3].split('_')[-1] for i in file_paths]
 
     print(gender[0], file_paths[0])
 
