@@ -8,6 +8,7 @@ from joblib import Parallel, delayed
 from tqdm import tqdm
 from resemblyzer import VoiceEncoder, preprocess_wav
 
+
 def get_parser():
     parser = argparse.ArgumentParser()
 
@@ -48,30 +49,41 @@ def get_parser():
 
     return parser
 
+
 def load_model(model_path):
     return joblib.load(model_path)
+
 
 def get_embed(voice_enc, file):
     return np.asarray(voice_enc.embed_utterance(preprocess_wav(file))).reshape(1, -1)
 
-def get_prediction(voice_enc,model, file):
+
+def get_prediction(voice_enc, model, file):
     if os.path.exists(file):
-        X = get_embed(voice_enc,file)
+        X = get_embed(voice_enc, file)
         return model.predict(X)[0]
     else:
         raise Exception(f"File path does not exist {file}")
+
+
+def get_prediction_csv_mode(voice_enc, model, csv_path, save_dir):
+    df = pd.read_csv(csv_path, header=None, names=['file_paths'])
+    df['predicted_gender'] = Parallel(n_jobs=-1)(delayed(get_prediction)(voice_enc, model, file_path) for file_path in tqdm(df['file_paths'].values))
+    df.to_csv(os.path.join(save_dir, 'predictions.csv'), header=False, index=False)
+    print(f"Inference Completed")
+
 
 def main(args):
     if os.path.exists(args.model_path):
         model = load_model(args.model_path)
     voice_enc = VoiceEncoder()
     if args.file_mode:
-        print(f"Predicted gender : {get_prediction(voice_enc,model, args.file_path)}")
+        print(f"Predicted gender : {get_prediction(voice_enc, model, args.file_path)}")
     else:
-        df = pd.read_csv(args.csv_path, header=None, names=['file_paths'])
-        df['predicted_gender'] = Parallel(n_jobs=-1)(delayed(get_prediction)(voice_enc,model, file_path) for file_path in tqdm(df['file_paths'].values))
-        df.to_csv(os.path.join(args.save_dir, 'predictions.csv'), header=False, index=False)
-        print(f"Inference Completed")
+        csv_path = args.csv_path
+        save_dir = args.save_dir
+        get_prediction_csv_mode(voice_enc, model, csv_path, save_dir)
+
 
 if __name__ == "__main__":
     s = time.time()
