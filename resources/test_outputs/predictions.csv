@@ -1,0 +1,16 @@
+../resources/test_data/openslr_kn_sample/male/1/clean/knm_00180_00012816557.wav,0
+../resources/test_data/openslr_kn_sample/male/1/clean/knm_00180_00028931935.wav,0
+../resources/test_data/openslr_kn_sample/male/1/clean/knm_00180_00042410675.wav,0
+../resources/test_data/openslr_kn_sample/male/1/clean/knm_00180_00011382081.wav,0
+../resources/test_data/openslr_kn_sample/female/12/clean/knf_00001_00458917460.wav,1
+../resources/test_data/openslr_kn_sample/female/12/clean/knf_00001_00176521305.wav,1
+../resources/test_data/openslr_kn_sample/female/12/clean/knf_00001_00268239215.wav,1
+../resources/test_data/openslr_kn_sample/female/12/clean/knf_00001_00443171758.wav,1
+../resources/test_data/bucket_sample/male/202009120957591797/clean/4_2717file-idfVMA6FgcBCQ.wav,0
+../resources/test_data/bucket_sample/male/202009120957591797/clean/39_2717file-idfVMA6FgcBCQ.wav,0
+../resources/test_data/bucket_sample/male/202009120957591797/clean/38_2717file-idfVMA6FgcBCQ.wav,0
+../resources/test_data/bucket_sample/male/202009120957591797/clean/51_2717file-idfVMA6FgcBCQ.wav,0
+../resources/test_data/bucket_sample/female/202009141109586182/clean/3_5_378file-idqUQWlr1113g.wav,1
+../resources/test_data/bucket_sample/female/202009141109586182/clean/1_24_378file-idqUQWlr1113g.wav,1
+../resources/test_data/bucket_sample/female/202009141109586182/clean/2_11_378file-idqUQWlr1113g.wav,1
+../resources/test_data/bucket_sample/female/202009141109586182/clean/4_11_378file-idqUQWlr1113g.wav,1
