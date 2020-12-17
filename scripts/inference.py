@@ -34,6 +34,13 @@ def get_parser():
     )
 
     parser.add_argument(
+        "--npz-file-path",
+        default=None,
+        type=str,
+        help="True to see results for single audio file"
+    )
+
+    parser.add_argument(
         "--file-path",
         default=None,
         type=str,
@@ -66,6 +73,10 @@ def get_prediction(voice_enc, model, file):
         raise Exception(f"File path does not exist {file}")
 
 
+def get_prediction_for_embed(model, embed):
+    return model.predict(embed)[0]
+
+
 def get_prediction_csv_mode(voice_enc, model, csv_path, save_dir):
     df = pd.read_csv(csv_path, header=None, names=['file_paths'])
     df['predicted_gender'] = Parallel(n_jobs=-1)(delayed(get_prediction)(voice_enc, model, file_path) for file_path in tqdm(df['file_paths'].values))
@@ -73,16 +84,31 @@ def get_prediction_csv_mode(voice_enc, model, csv_path, save_dir):
     print(f"Inference Completed")
 
 
+def get_prediction_from_npz_file(model, npz_file_path, save_dir):
+    npz_file = np.load(npz_file_path)
+    embeds = npz_file['embeds']
+    file_paths = npz_file['file_paths']
+    predicted_gender = Parallel(n_jobs=-1)(delayed(get_prediction_for_embed)(model, embed.reshape(1, -1)) for embed in tqdm(embeds))
+    df = pd.DataFrame(list(zip(file_paths, predicted_gender)), columns=['file_paths', 'gender'])
+    # df.to_csv(save_dir+'/predictions_from_npz.csv')
+    return df
+
 def main(args):
     if os.path.exists(args.model_path):
         model = load_model(args.model_path)
-    voice_enc = VoiceEncoder()
-    if args.file_mode:
-        print(f"Predicted gender : {get_prediction(voice_enc, model, args.file_path)}")
-    else:
-        csv_path = args.csv_path
-        save_dir = args.save_dir
-        get_prediction_csv_mode(voice_enc, model, csv_path, save_dir)
+        voice_enc = VoiceEncoder()
+        if args.file_mode:
+            print(f"Predicted gender : {get_prediction(voice_enc, model, args.file_path)}")
+
+        if args.npz_file_path:
+            npz_file_path = args.npz_file_path
+            save_dir = args.save_dir
+            get_prediction_from_npz_file(model, npz_file_path, save_dir)
+
+        else:
+            csv_path = args.csv_path
+            save_dir = args.save_dir
+            get_prediction_csv_mode(voice_enc, model, csv_path, save_dir)
 
 
 if __name__ == "__main__":
