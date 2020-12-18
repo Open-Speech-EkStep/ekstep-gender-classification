@@ -22,16 +22,15 @@ class InferenceTests(unittest.TestCase):
         get_prediction_csv_mode(voice_enc, model, csv_path, save_dir)
         self.assertTrue(path.exists(save_dir + 'predictions.csv'))
 
-    def test_returns_csv_with_predicted_genders_from_npz_file(self):
+    def test_returns_dict_with_predicted_genders_from_npz_file_as_values_and_file_path_as_keys(self):
         npz_file_path = '../resources/tarini.npz'
         model_path = '../model/clf_svc.sav'
-        save_dir = '../resources/test_outputs/'
         model = load_model(model_path)
-        file_vs_prediction_df = get_prediction_from_npz_file(model, npz_file_path, save_dir)
-        # self.assertTrue(path.exists(save_dir+'predictions_from_npz.csv'))
-        gender_values = set(list(file_vs_prediction_df['gender']))
-        self.assertEqual(list(file_vs_prediction_df.columns), ['file_paths', 'gender'])
-        self.assertEqual({0, 1}, gender_values)
+        file_vs_prediction_dict = get_prediction_from_npz_file(model, npz_file_path)
+        self.assertEqual("<class 'dict'>",  str(type(file_vs_prediction_dict)))
+        self.assertTrue(set(file_vs_prediction_dict.values()), ['m', 'f'])
+
+
 
 
 if __name__ == '__main__':
