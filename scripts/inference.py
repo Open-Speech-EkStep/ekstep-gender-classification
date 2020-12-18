@@ -79,19 +79,31 @@ def get_prediction_for_embed(model, embed):
 
 def get_prediction_csv_mode(voice_enc, model, csv_path, save_dir):
     df = pd.read_csv(csv_path, header=None, names=['file_paths'])
-    df['predicted_gender'] = Parallel(n_jobs=-1)(delayed(get_prediction)(voice_enc, model, file_path) for file_path in tqdm(df['file_paths'].values))
+    df['predicted_gender'] = Parallel(n_jobs=-1)(
+        delayed(get_prediction)(voice_enc, model, file_path) for file_path in tqdm(df['file_paths'].values))
     df.to_csv(os.path.join(save_dir, 'predictions.csv'), header=False, index=False)
     print(f"Inference Completed")
 
 
-def get_prediction_from_npz_file(model, npz_file_path, save_dir):
+def get_prediction_from_npz_file(model, npz_file_path):
+    '''
+
+    :param model: (str) model file with extension .sav, stored in ../model/clf_svc.sav
+    :param npz_file_path: (str) path to binary .npz file containing embeddings and file_paths
+    :return: (dict) : key-> file_path, value->predicted gender label ('m' or 'f')
+    '''
     npz_file = np.load(npz_file_path)
     embeds = npz_file['embeds']
     file_paths = npz_file['file_paths']
     predicted_gender = Parallel(n_jobs=-1)(delayed(get_prediction_for_embed)(model, embed.reshape(1, -1)) for embed in tqdm(embeds))
-    df = pd.DataFrame(list(zip(file_paths, predicted_gender)), columns=['file_paths', 'gender'])
-    # df.to_csv(save_dir+'/predictions_from_npz.csv')
-    return df
+    predicted_gender = list(map(lambda x: 'm' if x == 0 else 'f', predicted_gender))
+
+    if len(predicted_gender) == len(file_paths):
+        file_vs_gender_dict = dict(zip(file_paths, predicted_gender))
+    else:
+        raise Exception('len(predicted_genders) != len(embeddings)')
+    return file_vs_gender_dict
+
 
 def main(args):
     if os.path.exists(args.model_path):
