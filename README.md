@@ -1,4 +1,7 @@
 # ekstep-gender-classification
+
+This repository is a part of [Vakyansh's](https://open-speech-ekstep.github.io/) recipes to build state of the art Speech Recogniition Model.
+
  Inference Modes 
  ```
  --model-path : set the path of the model
