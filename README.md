@@ -3,7 +3,8 @@
 This repository is a part of [Vakyansh's](https://open-speech-ekstep.github.io/) recipes to build state of the art Speech Recogniition Model.
 
 To infer multiple audio files, place the file paths in a csv file and set the mode accordingly :
- Inference Modes 
+ 
+Inference Modes 
  ```
  --model-path : set the path of the model
  --file-mode  : default False; set True for single file inference
