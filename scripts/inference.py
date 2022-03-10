@@ -112,7 +112,7 @@ def main(args):
         if args.file_mode:
             print(f"Predicted gender : {get_prediction(voice_enc, model, args.file_path)}")
 
-        if args.npz_file_path:
+        elif args.npz_file_path:
             npz_file_path = args.npz_file_path
             save_dir = args.save_dir
             get_prediction_from_npz_file(model, npz_file_path, save_dir)
