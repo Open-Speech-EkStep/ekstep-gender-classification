@@ -19,9 +19,15 @@ Inference Modes
 
  ```
  
-Csv mode inference
-Create a csv containing multiple file paths
+Csv mode inference </br>
+Create a csv containing multiple file paths of the audios
  ```
  python scripts/inference.py --model-path model/clf_svc.sav --csv-path <file_paths>.csv --save-dir <destination path>
  
  ```
+
+Inference outputs for csv and single inference modes:
+```
+0 : Male
+1 : Female
+```
